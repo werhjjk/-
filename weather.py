@@ -2,7 +2,7 @@ import requests
 import json
 
 # 1. 설정 (본인의 디스코드 주소로 꼭 바꾸세요!)
-WEBHOOK_URL = "여기에_디스코드_주소_입력"
+WEBHOOK_URL = "https://discord.com/api/webhooks/1482326991939309573/0qINgz4w9dKTuBvvEmDJYlxzksYuN5TqPkbM4bhlMk5FKIzmZyg0KnGUhwsWpQoXIVRS"
 
 def get_weather_info():
     # 부산 날씨와 비 확률 가져오기
