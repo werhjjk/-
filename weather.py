@@ -16,10 +16,25 @@ def get_weather_info():
     return temp, rain_chance
 
 def get_sports_news():
-    """실시간 스포츠 뉴스 상위 3개를 링크와 함께 가져옵니다."""
-    url = f"https://newsapi.org/v2/top-headlines?country=kr&category=sports&apiKey={NEWS_API_KEY}"
-    res = requests.get(url).json()
+    """축구와 야구 관련 최신 뉴스를 가져옵니다."""
+    # q=축구 OR 야구 키워드를 사용해 두 종목을 모두 검색합니다.
+    search_url = f"https://newsapi.org/v2/everything?q=(축구 OR 야구)&sortBy=publishedAt&language=ko&apiKey={NEWS_API_KEY}"
+    res = requests.get(search_url).json()
     articles = res.get('articles', [])
+
+    news_list = []
+    for art in articles:
+        title = art.get('title')
+        url = art.get('url')
+        if title and title != '[Removed]' and url:
+            # 제목이 깔끔하게 나오도록 다듬기
+            clean_title = title.split(' - ')[0]
+            # 축구 관련인지 야구 관련인지 이모지로 구분해주면 더 보기 좋겠죠?
+            emoji = "⚽" if "축구" in clean_title else "⚾" if "야구" in clean_title else "🏆"
+            news_list.append(f"{emoji} [{clean_title}]({url})")
+        if len(news_list) >= 4: # 종목이 늘어났으니 뉴스 개수를 4개로 늘려봅니다.
+            break
+    return "\n".join(news_list) if news_list else "축구/야구 소식이 없습니다."
     
     # 헤드라인이 없을 경우 검색 모드
     if not articles:
